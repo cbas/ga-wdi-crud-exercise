@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const jwt = require('express-jwt')
 
 // connect to database
 const dbuser = process.env.SCOREBOARD_DB_USER
@@ -12,8 +13,8 @@ db.on('error', console.error.bind(console, 'connection error: '))
 
 // define mongoose model (schema)
 const Score = mongoose.model('Score', {
-  "player": String,
-  "score": Number
+  player: String,
+  score: Number
 })
 
 const app = express()
@@ -21,11 +22,17 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.use('/scores', jwt({
+  secret: new Buffer(process.env.SCOREBOARD_AUTH0_SECRET, 'base64'),
+  audience: process.env.SCOREBOARD_AUTH0_AUDIENCE
+}))
+
 app.get('/scores', (req, res) => {
   Score.model('Score').find((err, scores) => {
     if (err) {
       console.error(err)
       res.status(404).end(err)
+      return
     }
     res.json(scores)
   })

@@ -2,11 +2,19 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Scoreboard</title>
     <style media="screen">
     </style>
+    <script src="//cdn.auth0.com/js/lock-7.12.min.js" defer></script>
+    <script src="frontend.js" defer></script>
   </head>
   <body>
+    <section id="authentication">
+      <button class="login">Log In</button>
+      <p>Name: <span class="name"></span></p>
+      <button class="logout">Log Out</button>
+    </section>
     <h1>My Scoreboard</h1>
     <h2>Create a new player</h2>
     <form class="" action="/scores/" method="POST">
@@ -39,35 +47,5 @@
       </tr>
     </table>
     <br>
-    <script type="text/javascript">
-      var selectUpdate = document.getElementById('select-player-update')
-      var selectDelete = document.getElementById('select-player-delete')
-      var table = document.getElementById('table')
-      fetch('/scores')
-        .then(res => res.json())
-        .then(data => {
-          data.forEach(member => {
-            // populate select options
-            var op1 = document.createElement('option')
-            var op2 = document.createElement('option')
-            op1.textContent = member.player
-            op2.textContent = member.player
-            selectUpdate.appendChild(op1)
-            // selectDelete.appendChild(op2)
-
-            // populate table rows
-            var tr = document.createElement('tr')
-            var td1 = document.createElement('td')
-            var td2 = document.createElement('td')
-            td1.textContent = member.player
-            td2.textContent = member.score
-            tr.appendChild(td1)
-            tr.appendChild(td2)
-            table.appendChild(tr)
-          })
-        }).catch(error => {
-          throw new Error(error)
-        })
-    </script>
   </body>
 </html>
